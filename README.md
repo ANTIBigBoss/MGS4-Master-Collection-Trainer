@@ -210,3 +210,8 @@ The main form lets you:
 - Remove visual effects.
 - Load another stage.
 - Open advanced debugging tools.
+
+## Credits/Thanks
+
+Big thanks to the following for help with the autoupdater, finding memory addresses, GUI assets, or just chatting to figure things out:
+SageFantasma, Snake_Swiss, Trilon, Nitroid, TriggerHappy.
