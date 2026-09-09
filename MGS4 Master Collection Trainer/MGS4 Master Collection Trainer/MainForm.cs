@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -115,11 +116,63 @@ namespace MGS4_Master_Collection_Trainer
         protected override async void OnShown(EventArgs e)
         {
             base.OnShown(e);
+
+            try
+            {
+                string currentVersion = Application.ProductVersion.Split('+')[0];
+
+                bool updateAvailable = await Task.Run(() =>
+                    VersionSupport.CheckIfNewUpdateExists(currentVersion));
+
+                if (updateAvailable)
+                {
+                    DialogResult result = MessageBox.Show(
+                        "A new version of MGS4 Master Collection Trainer is available.\n\n" +
+                        "Would you like to update now?",
+                        "Update Available",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        string appDirectory = AppContext.BaseDirectory.TrimEnd(
+                            Path.DirectorySeparatorChar,
+                            Path.AltDirectorySeparatorChar);
+
+                        string updaterPath = Path.Combine(
+                            Directory.GetParent(appDirectory).FullName,
+                            "AutoUpdater.exe");
+
+                        // Download Big Daddy Sage's updater if it isn't already present.
+                        if (!File.Exists(updaterPath))
+                        {
+                            await Task.Run(() =>
+                                VersionSupport.DownloadAutoUpdater());
+                        }
+
+                        VersionSupport.StartAutoUpdater();
+
+                        Close();
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // An update-check failure should never prevent the trainer from opening.
+                LoggingManager.Instance.Log("Update check failed: " + ex);
+            }
+
             started = true;
             BeginInitializationWindow();
             SetStatus("Checking existing hooks and preparing the trainer...");
             await RefreshAsync();
-            if (CanUpdate) { statusTimer.Start(); resolutionTimer.Start(); }
+
+            if (CanUpdate)
+            {
+                statusTimer.Start();
+                resolutionTimer.Start();
+            }
         }
 
         private void BindEffect(CheckBox control, TableEffect effect, string description)

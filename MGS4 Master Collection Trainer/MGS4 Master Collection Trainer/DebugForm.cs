@@ -60,6 +60,7 @@ namespace MGS4_Master_Collection_Trainer
         {
             base.OnLoad(e);
             if (!DesignMode) InitializeDebugControls();
+            
         }
 
         // Runtime rows leave the standard outer form editable in the WinForms designer.
@@ -76,6 +77,7 @@ namespace MGS4_Master_Collection_Trainer
             BuildSignatures();
             BuildPrerequisites();
             BuildTableActions();
+            MessageBox.Show("Warning: This page is an unmaintained staging area for experimental features that may later be added to the main trainer. \nFeatures here may be incomplete or unstable, and support/troubleshooting is not provided. \nUse at your own risk.\n");
         }
 
         protected override async void OnShown(EventArgs e)
