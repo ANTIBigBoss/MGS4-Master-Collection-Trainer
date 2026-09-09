@@ -171,7 +171,7 @@ The stage controls allow you to:
 
 The trainer uses the game's stage-loading code to queue the transition.
 
-> **Warning:** Changing stages may reset Snake's inventory.
+> **Warning:** Changing stages will reset Snake's inventory.
 
 ## Debugger Tool
 
